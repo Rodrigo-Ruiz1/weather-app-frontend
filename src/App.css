@@ -1,38 +1,65 @@
 .App {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+#navDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#navUl {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#navLi {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#weatherCard {
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  width: 430px;
+  border-style: solid;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  margin: 20px;
+}
+
+#results {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+#extraInfo {
+  display: flex;
+  flex-direction: row;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#profile {
+  display: flex;
+  margin-top: -90px;
+  flex-direction: column;
+  align-items: center;
+}
+
+#profileInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
 }
