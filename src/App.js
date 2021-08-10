@@ -6,9 +6,10 @@ import Homepage from './components/Pages/Homepage';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Register from './components/Register';
+import Forecast from './components/Pages/Forecast';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar,  Container, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,47 +46,51 @@ function App() {
         <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
           <GlobalStyles />
           <div className="App">
-            <button onClick={() => themeToggler()}></button>
-              <Navbar bg="light" expand="lg">
-                <Container>
-                  <Navbar.Brand href="#home">Another Weather App</Navbar.Brand>
-                  <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                  <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
+            <Navbar bg="light" expand="lg" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+
+              <button onClick={() => themeToggler()}></button>
+              <Container >
+                <Navbar.Brand><Link to="/">Weather App #10</Link></Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                  <Nav className="me-auto">
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                       <Nav.Link>
                         <Link to="/">Home</Link>
-                        </Nav.Link>
-                      <Nav.Link><Link to="/dashboard">Profile</Link></Nav.Link>
+                      </Nav.Link>
+                      <Nav.Link><Link to="/forecast">Forecast</Link></Nav.Link>
                       <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                        <NavDropdown.Item>
+                          <Link to="/dashboard">Profile</Link>
+                        </NavDropdown.Item>
                         <NavDropdown.Item>
                           <Link to="/login">Login</Link>
                         </NavDropdown.Item>
                         <NavDropdown.Item>
                           <Link to="/register">Register</Link>
                         </NavDropdown.Item>
-                        <NavDropdown.Item>
-                          <Link to="/logout">Logout</Link>
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                       </NavDropdown>
-                    </Nav>
-                    </Navbar.Collapse>
-                </Container>
-              </Navbar>
-              <Switch>
-                <Route exact path='/'>
-                  <Homepage isAuthenticated={isAuthenticated} />
-                </Route>
-                <Route exact path='/login' render={props => !isAuthenticated ? (<Login {...props} setAuth={setAuth} />) : (<Redirect to='/dashboard' />)} />
-                <Route exact path='/register' render={props => !isAuthenticated ? (<Register {...props} setAuth={setAuth} />) : (<Redirect to='/login' />)} />
-                <Route exact path='/dashboard' render={props => <Dashboard {...props} setAuth={setAuth} />} />
-              </Switch>
-            </div>
+                    </div>
+                  </Nav>
+                </Navbar.Collapse>
+              </Container>
+            </Navbar>
+            <Switch>
+              <Route exact path='/'>
+                <Homepage isAuthenticated={isAuthenticated} />
+              </Route>
+              <Route exact path='/forecast'>
+                <Forecast />
+              </Route>
+              <Route exact path='/login' render={props => !isAuthenticated ? (<Login {...props} setAuth={setAuth} />) : (<Redirect to='/' />)} />
+              <Route exact path='/register' render={props => !isAuthenticated ? (<Register {...props} setAuth={setAuth} />) : (<Redirect to='/login' />)} />
+              <Route exact path="/dashboard" render={props => isAuthenticated ? (<Dashboard {...props} setAuth={setAuth} />) : (<Redirect to="/" />)}/>
+            </Switch>
+          </div>
         </ThemeProvider>
       </Router>
     </Fragment>
-      );
+  );
 }
 
-      export default App;
+export default App;

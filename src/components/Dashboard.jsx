@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Card, Button, Form } from 'react-bootstrap';
+import { Card, Button, Form, Dropdown, Spinner } from 'react-bootstrap';
+import WeatherCard from './WeatherCard';
 
 const Dashboard = ({ setAuth }) => {
 
@@ -8,10 +9,12 @@ const Dashboard = ({ setAuth }) => {
     const [newPic, setNewPic] = useState({
         pic: ""
     });
-    
-    const [fCity, setFCity] = useState([]);
-    const [fState, setFState] = useState([]);
-    const [fId, setFId] = useState([]);
+
+    const [favorites, setFavorites] = useState([])
+    const [weather, setWeather] = useState({})
+    const [condition, setCondition] = useState()
+    const [menu, setMenu] = useState('')
+
 
     async function getUser() {
         try {
@@ -36,12 +39,17 @@ const Dashboard = ({ setAuth }) => {
             `http://localhost:3333/dashboard/favorites/${user_id}`
         ).then(response => response.json());
         console.log('favorites response: ', response);
-        response.map(favorite => {
-            console.log(favorite.city)
-            setFCity({...fCity}, favorite.city)
-            setFState({...fState}, favorite.state)
-            setFId({...fId}, favorite.id)
-        })
+        setFavorites(response)
+
+    }
+
+    const _fetchWeather = async (city, state) => {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city},${state},us&units=imperial&appid=${process.env.REACT_APP_NOT_SECRET_CODE}`
+        ).then(response => response.json());
+        console.log('response for single date: ', response);
+        setWeather([weather, response])
+        setCondition([condition, response.weather[0].main])
         return response;
     }
 
@@ -88,31 +96,48 @@ const Dashboard = ({ setAuth }) => {
         })
     }
 
+    const _menuChange = (field, val) => {
+
+    }
+
     return (
         <Fragment>
             {user ? (
                 <>
-                    <Card style={{ width: '18rem' }}>
-                        {profilePic == null ? (
-                            <Card.Img variant="top" src="http://cdn.onlinewebfonts.com/svg/img_258083.png"></Card.Img>
-                        ) : (
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Card style={{ width: '25rem' }}>
+                            {profilePic == null ? (
+                                <Card.Img variant="top" src="http://cdn.onlinewebfonts.com/svg/img_258083.png"></Card.Img>
+                            ) : (
 
-                            <Card.Img variant="top" src={profilePic} />
-                        )}
-                        <Card.Body>
-                            <Card.Title>{user.username}</Card.Title>
-                            <Card.Text>
-                                <form onSubmit={onSubmitForm}>
-                                    <input value={newPic.pic} name="pic" placeholder="Enter URL for new image" onChange={e => onChange(e)}></input>
-                                    <button variant="primary">Submit</button>
-                                </form>
-                            </Card.Text>
-                            <Button variant="primary" onClick={e => logout(e)}>Logout</Button>
-                        </Card.Body>
-                    </Card>
+                                <Card.Img variant="top" src={profilePic} />
+                            )}
+                            <Card.Body>
+                                <Card.Title>{user.username}</Card.Title>
+                                <Card.Text>
+                                    <form onSubmit={onSubmitForm}>
+                                        <input value={newPic.pic} name="pic" placeholder="Enter URL for new image" onChange={e => onChange(e)}></input>
+                                        <button variant="primary">Submit</button>
+                                    </form>
+                                </Card.Text>
+                                <Button variant="primary" onClick={e => _handleFavoritesRequest(e)}>View your favorites</Button>
+                                <Button variant="primary" onClick={e => logout(e)}>Logout</Button>
+                                <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                        Dropdown Button
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Card.Body>
+                        </Card>
+                    </div>
                 </>
             ) : (
-                <h1>Currently not logged in</h1>
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
             )}
         </Fragment>
     )

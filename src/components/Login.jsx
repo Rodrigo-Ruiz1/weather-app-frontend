@@ -25,6 +25,7 @@ const Login = ({ setAuth }) => {
             });
             const parseResponse = await response.json()
             localStorage.setItem('token', parseResponse.token)
+            setAuth(true)
         } catch (error) {
             console.log('ERROR: ', error);
             return error;
@@ -52,7 +53,7 @@ const Login = ({ setAuth }) => {
                         Submit
                     </Button>
             </Form>
-                <Link to='/register'>Register</Link>
+            <p>Don't have an account yet? Try: <Link to='/register'>Register</Link></p>
         </Fragment>
                 
             )
